@@ -6,7 +6,7 @@ See also:
 
 * [Trunk based development](https://trunkbaseddevelopment.com/)
 * [Why Google stores billions of lines of code in a single repository (2016) (acm.org)](https://dl.acm.org/citation.cfm?id=2854146)
-* https://www.youtube.com/watch?v=W71BTkUbdqE
+* [Scaling Mercurial at Facebook](https://code.facebook.com/posts/218678814984400/scaling-mercurial-at-facebook/)
 
 
 ## Tradeoffs
