@@ -1,4 +1,4 @@
-# Repository strategies
+# Source code management - notes and ideas
 
 Work in progress.
 
