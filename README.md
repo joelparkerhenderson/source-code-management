@@ -1,4 +1,4 @@
-# Source code management
+# Source code management - notes and ideas
 
 Notes on mono-repos, trunk-based-development, etc.
 
