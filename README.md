@@ -4,7 +4,7 @@ Notes on mono-repos, trunk-based-development, etc.
 
 Work in progress.
 
-* [Security and auditing, such as for SOX, PCI, HIPAA, etc.](security.md)
+* [Security, auditing, compliance](security_auditing_compliance.md)
 * [Bazel/Blaze for dependencies](bazel_blaze_for_dependencies.md)
 * [SCM at Facebook](scm_at_facebook.md)
 * [SCM at Google](scm_at_google.md)

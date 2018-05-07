@@ -1,21 +1,55 @@
-# Security and auditing
+# Security, auditing, compliance
 
-Security for source code management is especially important for areas such as industry auditing, goverment regulation, sensitive codebases, and high-security applications, and legal needs for [SOX](https://en.wikipedia.org/wiki/Sarbanes%E2%80%93Oxley_Act), [PCI](https://en.wikipedia.org/wiki/Payment_Card_Industry_Data_Security_Standard), [HIPAA](https://en.wikipedia.org/wiki/Health_Insurance_Portability_and_Accountability_Act), [FERPA](https://en.wikipedia.org/wiki/Family_Educational_Rights_and_Privacy_Act), [GDPR](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation), etc.
+Security for source code management is especially important for auditing and compliance, such as for industry best practices, goverment regulations, sensitive codebases, high-security applications, and legal needs for [SOX](https://en.wikipedia.org/wiki/Sarbanes%E2%80%93Oxley_Act), [PCI](https://en.wikipedia.org/wiki/Payment_Card_Industry_Data_Security_Standard), [HIPAA](https://en.wikipedia.org/wiki/Health_Insurance_Portability_and_Accountability_Act), [FERPA](https://en.wikipedia.org/wiki/Family_Educational_Rights_and_Privacy_Act), [GDPR](https://en.wikipedia.org/wiki/General_Data_Protection_Regulation), etc.
 
-* [](*)
+* [Key concepts](#key-concepts)
+* [Best practices](#best-practices)
+  * [Least Privilege](#least-privilege)
+  * [Branch Protection](#branch-protection)
+  * [Sign commits ](#sign-commits-)
+  * [Automate builds](#automate-builds)
+  * [Automate versioning](#automate-versioning)
+  * [Automate deployments](#automate-deployments)
+  * [DevSecOps](#devsecops)
+  * [Force code reviews](#force-code-reviews)
+  * [Create immutable release artifacts](#create-immutable-release-artifacts)
+  * [Use annotated tags ](#use-annotated-tags-)
+  * [Rotate user credentials](#rotate-user-credentials)
+  * [Protect secrets ](#protect-secrets-)
+  * [One-way logging/monitoring](#one-way-logging-monitoring)
+  * [Build system security ](#build-system-security-)
+  * [Binary Reproducible Builds ](#binary-reproducible-builds-)
+  * [Audit](#audit)
+  * [Regulator controls](#regulator-controls)
+  * [Regulatory controls vs. DevOps](#regulatory-controls-vs-devops)
+* [Implementations](#implementations)
+  * [By zieziegabor](#by-zieziegabor)
+* [Encryption](#encryption)
+* [Wordbook](#wordbook)
+  * [Tools](#tools)
+  * [Security laws](#security-laws)
+* [Related](#related)
+  * [Books](#books)
+  * [Blogs](#blogs)
+  * [Links](#links)
+  * [Organizations](#organizations)
+  * [Thanks](#thanks)
 
 
-## Best practices
+## Key concepts
 
-
-Key concepts:
+Key concepts begin with these three steps:
 
 * Establish a clear policy and also a clear process. 
 
-* Use auditing, automation, encryption, monitoring, etc.
+* Use auditing, automation, encryption, monitoring, tracking, and the like.
 
 * Ensure all areas are covered by multiple responsible people.
 
+Comment: To be honest there's a whole rabbit hole you can go down when you start thinking about compliance for source code/build system/testing/infrastructure-as-code/configuration-management/orchestration code/secret management/monitoring/disaster recovery/HA system architecture.
+
+
+## Best practices
 
 
 ### Least Privilege
@@ -125,27 +159,6 @@ Ensure there are at least two project admins for each project.
 Inform participants where to find the admins, in order to get a repository created, or a permission update, etc.
 
 
-### Use encryption
-
-Use encryption on transport for all the things 
-
-* Use nfs v4 for BitBucket Data Center with kerberos auth, where nfs is the only supported protocol 
-
-* Use TLS 1.2 on db connections to/from BitBucket, postgres is my favorite for this
-
-* BitBucket has Personal Tokens for automation as of 5.5+. This goes a long way towards build user passwords not getting passed around
-
-* Users should use a password protected private SSH key - using keychain and jenkins credential stores to store the password for faceless automation users
-
-* A lot of content handling rules (like H-to-the-I-to-the-P-to-the-AA) require encryption on disk (where possible) - a rule I have never been a fan of, as it seems pretty freaking ridiculous that someone would walk into a server room and lift the hard drive, but if you are running Server (not Data Center), you can usually rely on LUKS
-
-* Do not make automation users with passwords shared between 8 different build systems administrators on projects... this is bad automation, but if one must, separate projects used by people from the robots
-
-* Make sure to put SSL/TLS on the Elasticsearch connection (using the buckler plugin) for BitBucket Data Center
-
-* As long as you are on a newer version of BitBucket Server, I think the embedded for standalone binds to localhost only, but make sure your index is not exposed, or you are excluding anything that should not go over the wire
-
-
 ### Regulator controls
 
 Regulatory controls are a bit tricky to tie directly back to actual best practices - they're generally written with language such as "there must be a traceable log of all changes done to this system". That of course can be accomplished by a plain 'ol ticketing system, or by a git log on a repo, provided there is documentation on our end explaining how our process implements that required control.
@@ -161,12 +174,6 @@ There is also separation of privileges, which means people who grant access are 
 
 Use auditing so if people try to abuse the system, then there is a record of it and someone (or some system) is analyzing it to alert for unexpected behaviour.
 
-
-### DevOps Handbook
-
-The DevOps Handbook has some good stuff on these topics, in addition to what others here have said.
-
-https://smile.amazon.com/DevOps-Handbook-World-Class-Reliability-Organizations/dp/1942788002/ref=sr_1_1
 
 
 ## Implementations
@@ -185,6 +192,29 @@ This gives our developers the ability to use whatever tool(s) they want to do co
 In HG we do this by using both GPG modules (the built in one for regular commits and the 3rd party one for sign offs).
 
 
+## Encryption
+
+Encryption specifics:
+
+* Use encryption on transport.
+
+* Use nfs v4 for BitBucket Data Center with kerberos auth, where nfs is the only supported protocol 
+
+* Use TLS 1.2 on db connections to/from BitBucket, postgres is my favorite for this
+
+* BitBucket has Personal Tokens for automation as of 5.5+. This goes a long way towards build user passwords not getting passed around
+
+* Users should use a password protected private SSH key - using keychain and jenkins credential stores to store the password for faceless automation users
+
+* A lot of content handling rules (like H-to-the-I-to-the-P-to-the-AA) require encryption on disk (where possible) - a rule I have never been a fan of, as it seems pretty freaking ridiculous that someone would walk into a server room and lift the hard drive, but if you are running Server (not Data Center), you can usually rely on LUKS
+
+* Do not make automation users with passwords shared between 8 different build systems administrators on projects... this is bad automation, but if one must, separate projects used by people from the robots
+
+* Make sure to put SSL/TLS on the Elasticsearch connection (using the buckler plugin) for BitBucket Data Center
+
+* As long as you are on a newer version of BitBucket Server, I think the embedded for standalone binds to localhost only, but make sure your index is not exposed, or you are excluding anything that should not go over the wire
+
+
 ## Wordbook
 
 
@@ -195,6 +225,7 @@ In HG we do this by using both GPG modules (the built in one for regular commits
 * [Bazel by Google](https://bazel.build/): Build and test software of any size, quickly and reliably.
 * [CapsuleCD](https://github.com/AnalogJ/capsulecd): a generic Continuous Delivery pipeline for versioned artifacts and libraries written in any language.
 * [Nexus Repository by Sonatype](https://www.sonatype.com/nexus-repository-sonatype): Expert flow control for binaries, build artifacts, and release candidates.
+
 
 ### Security laws
 
@@ -207,18 +238,34 @@ In HG we do this by using both GPG modules (the built in one for regular commits
 
 ## Related
 
-Related links:
+
+### Books
+
+* [The DevOps Handbook: How to Create World-Class Agility, Reliability, and Security in Technology Organizations](https://smile.amazon.com/DevOps-Handbook-World-Class-Reliability-Organizations/dp/1942788002/ref=sr_1_1)
+
+
+### Blogs
+
+* This list has a stronger code security bent than a similar blog post I did a while back: https://blog.thesparktree.com/devops-for-startups
+
+
+### Links
 
 * [GitHub special files and paths](https://github.com/joelparkerhenderson/github_special_files_and_paths)
 
 * [When it comes to managing repositories for highly sensitive/regulated code bases, what are some best practices that can be implemented with regards to code reviews, approvals, and deployment to production?](https://www.reddit.com/r/devops/comments/8gmf5m/when_it_comes_to_managing_repositories_for_highly/)
 
-* Special thanks to https://www.reddit.com/user/analogj
+
+### Organizations
 
 * [Defense Information Systems Agency (DISA)](https://disa.mil/)
   * [Information Assurance Support Environment (IASE)](https://iase.disa.mil/)
     * [Security Technical Implementation Guides (STIGs)](https://iase.disa.mil/stigs)
       * [DISA IASE STIGs Master List](https://iase.disa.mil/stigs/Pages/a-z.aspx)
 
+
+### Thanks
+
+* Special thanks to https://www.reddit.com/user/analogj
 
 
