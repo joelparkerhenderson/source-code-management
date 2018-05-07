@@ -206,13 +206,13 @@ Encryption specifics:
 
 * Users should use a password protected private SSH key - using keychain and jenkins credential stores to store the password for faceless automation users
 
-* A lot of content handling rules (like H-to-the-I-to-the-P-to-the-AA) require encryption on disk (where possible) - a rule I have never been a fan of, as it seems pretty freaking ridiculous that someone would walk into a server room and lift the hard drive, but if you are running Server (not Data Center), you can usually rely on LUKS
+* A lot of content handling rules (such as HIPAA) require encryption on disk (where possible). Comment: This rule protects the data in case someone would walk into a server room and lift the hard drive, but if you are running Server (not Data Center), you can usually rely on LUKS.
 
 * Do not make automation users with passwords shared between 8 different build systems administrators on projects... this is bad automation, but if one must, separate projects used by people from the robots
 
 * Make sure to put SSL/TLS on the Elasticsearch connection (using the buckler plugin) for BitBucket Data Center
 
-* As long as you are on a newer version of BitBucket Server, I think the embedded for standalone binds to localhost only, but make sure your index is not exposed, or you are excluding anything that should not go over the wire
+* As long as you are on a newer version of BitBucket Server, you can verify that the embedded for standalone binds to localhost only, but make sure the index is not exposed, or you are excluding anything that should not go over the wire.
 
 
 ## Wordbook
@@ -246,7 +246,7 @@ Encryption specifics:
 
 ### Blogs
 
-* This list has a stronger code security bent than a similar blog post I did a while back: https://blog.thesparktree.com/devops-for-startups
+* [Devops for Startups & Small Teams by Jason Kulatunga at Sparktree](https://blog.thesparktree.com/devops-for-startups)
 
 
 ### Links
