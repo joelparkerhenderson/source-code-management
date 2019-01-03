@@ -59,3 +59,34 @@ Plenty of opensource projects are in google3 (that frequently gets merged into e
 
   * Projects use Copybara to import/export OSS code. https://github.com/google/copybara
 
+
+### Google capabilties
+
+By [malkia](https://news.ycombinator.com/user?id=malkia)
+
+I worked at google for 2-3 years, under google3 depot.
+
+You can actually compile, and run in dev/staging certain things, inspect code, click on function, and see callsites, even "debug" from the browser. Debugging, is pretty much, if your binary have stepped through a bookmark, then it'll tell you, and you may print out locals from the scope - like vars, etc. - hard to explain in short.
+
+Then "checking out", to put in p4/svn - is not really like that - but you can find pretty much videos, docs explaining it. It's more like - you create a "workspace", "client" (piper has history from p4, so some terms are similar to perforce), and in this client - you "view" the entire depot, and changes you've made are "overlayed". Then you can submit these in a CL (much like perforce).
+
+There is also git (git5) and hg mode, but I've never used them. I've used the "CitC" one (client in the cloud), and was great as I was able to edit, and later edit, even build,... even deploy all from the browser (though prefer real IDE there - like Eclipse/IntelliJ/CLion).
+
+AFAIK, only few hundreth files are not visible to employees, and certain folks (contractors) may be limited there too.
+
+
+### Google does monorepo and polyrepo
+
+By [malkia](https://news.ycombinator.com/user?id=malkia)
+
+Google's significant new project, fuchsia, is set-up as multi-git repo. For fuchsia, they use a tool called "jiri" to update the repos, previously (and maybe still in use) is the "gclient" sync tool way from depot_tools.
+  
+  * jiri: https://fuchsia.googlesource.com/jiri/
+  
+  * gclient: https://chromium.googlesource.com/chromium/tools/depot_tools.git/+/master/gclient
+  
+  * depot_tools: https://chromium.googlesource.com/chromium/tools/depot_tools.git
+
+  * This reflects a bit to the build system of choice, GN (used in the above), previously gyp, feels similar on the surface (script) to Bazel, but has some significant differences (gn has some more imperative parts, and it's a ninja-build generator, while bazel, like pants/bucks/please.build is a build system on it's own).
+
+  * Bazel is getting there to support monorepos (through WORKSPACEs), but there are some hard problems there.
