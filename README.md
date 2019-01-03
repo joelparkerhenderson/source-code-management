@@ -1,6 +1,6 @@
 # Source code management - notes and ideas
 
-Notes on source code management such as Git, repository architecture such as monorepo vs. multirepo, topic flows such as trunk-based-development, and more. Work in progress. Improvement ideas welcome.
+Notes on source code management such as Git, repository architecture such as monorepo vs. polyrepo, topic flows such as trunk-based-development, and more. Work in progress. Improvement ideas welcome.
 
 Contents:
 
@@ -20,45 +20,13 @@ See also:
 * [Why Google stores billions of lines of code in a single repository (2016) (acm.org)](https://dl.acm.org/citation.cfm?id=2854146)
 * [Scaling Mercurial at Facebook](https://code.facebook.com/posts/218678814984400/scaling-mercurial-at-facebook/)
 * [Monorepos: Please don’t! by Matt Klein](https://medium.com/@mattklein123/monorepos-please-dont-e9a279be011b)
+* [Hacker News discussion](https://news.ycombinator.com/item?id=18808909)
 
 
-## Tradeoffs of monorepo vs. multirepo
-
-Benefits:
-
-  * unified versioning
-
-  * extensive code sharing
-
-  * simplified dependency management
-
-  * atomic changes
-
-  * large-scale refactoring
-
-  * collaboration across teams
-
-  * flexible code ownership
-
-  * code visibility
-
-Drawbacks:
-
-  * having to create and scale tools for development and execution
-
-  * having to maintain code health
-
-  * potential for codebase complexity (such as unnecessary dependencies)
-
-Opinions:
-
-  * For a huge non-open codebase there are some pretty large downsides to a fully distributed VCS in exchange for relatively few benefits. 
+## Monorepo vs. polyrepo
 
 
-## Monorepo vs. multirepo
-
-
-### What is monorepo? What is multirepo?
+### What is monorepo? What is polyrepo?
 
 Monorepo is a nickname that means "using one repository for the source code management version control system".
 
@@ -68,41 +36,87 @@ Monorepo is a nickname that means "using one repository for the source code mana
 
   * Monorepo is a.k.a. one-repo or uni-repo.
   
-Multirepo is a nickname that means "using multiple repostories for the source code management version control system". 
+Polyrepo is a nickname that means "using multiple repostories for the source code management version control system". 
 
-  * A multirepo architecture means using multiple repositories, rather than one repository.
+  * A polyrepo architecture means using multiple repositories, rather than one repository.
 
-  * For example, a multirepo can use a repo for a web app project, a repo for a mobile app project, and a repo for a server app project. 
+  * For example, a polyrepo can use a repo for a web app project, a repo for a mobile app project, and a repo for a server app project. 
 
-  * Multirepo is a.k.a. many-repo or poly-repo.  
+  * Polyrepo is a.k.a. many-repo or multi-repo.  
 
 
-### What are key similarities and differences between monorepo and multirepo?
+### Key similarities and differences of monorepo and polyrepo
 
-Key similarities between monorepo and multirepo:
+Key similarities between monorepo and polyrepo:
 
   * Both architectures ultimately track the same source code files, and do it by using source code management (SCM) version control systems (VCS) such as git or mercurial. 
   
   * Both architectures are proven successful for projects of all sizes.
 
-  * Both architectures are simple to implement using any typical SCM VCS, up to a scaling limit.
+  * Both architectures are straightforward to implement using any typical SCM VCS, up to a scaling limit.
 
-The key differences between monorepo and multirepo in terms of structure:
+Key differences between monorepo and polyrepo, summarized from many proponents:
 
-  * A monorepo manages projects in one repository, together, holistically. In typical practice, a monorepo repo contains multiple projects, programming languages, packaging processes, and the like. 
-
-  * A multirepo manages projects in multiple repositories, separately, independently. In typical practice, a multirepo repo contains one project, programming language, packaging process, release roadmap, etc.
-
-The key differences between monorepo and multirepo in terms of pros and cons:
-
-  * Pro: monorepo proponents like the ability to work in all the projects simultaneously, all within the monorepo. A monorepo emphasizes that code changes affect all the projects, and can be tracked together, tested together, and released together.
-
-  * Pro: multirepo proponents like the ability to work in each project one at a time, each in its own repo. A multirepo emphasizes that code changes affect only one project, and can be tested independently, and released independently.
-  
-  * Con: monorepo scaling necessitates specialized tooling. For example, it is currently not practical to use vanilla git with very large repos, or very large files, without any extra tooling. For monorepo scaling, teams invest in writing custom tooling and providing custom training.
-
-  * Con: multirepo scaling necessitates specialized coordination. For example, it is currently not practical to use vanilla git with many projects across many repos, where a team wants to coordinate code changes, testing, packaging, and releasing. For multirepo scaling, teams invest in writing coordination scripts and careful cross-version compatibility.
-
+<table>
+  <thead>
+    <tr>
+      <th>Monorepo</th>
+      <th>Polyrepo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Manages projects in one repository, together, holistically.</td>
+      <td>Manages projects in multiple repositories, separately, independently.</td>
+    </tr>
+    <tr>
+      <td>A repo contains multiple projects, programming languages, packaging processes, etc.</td>
+      <td>A repo contains one project, programming language, packaging process, etc.</td>
+    </tr>
+    <tr>      
+      <td>Ability to work in all projects simultaneously, all within the monorepo. </td>
+      <td>Ability to work in each project one at a time, each in its own repo.</td>
+    </tr>
+    <tr>      
+      <td>Ensures changes affect all the projects, can be tracked together, tested together, and released together.</td>
+      <td>Ensures changes affect only one project, can be tracked separately, tested separately, and released separately.</td>
+    </tr>
+    <tr>      
+      <td>Easier collaboration and code sharing within an organization. </td>
+      <td>Easier collaboration and code sharing across organizations.</td>
+    </tr>
+    <tr>      
+      <td>Good white box testing because all projects are testable together, and verifiable holistically.</td>
+      <td>Good black box testing because each project is tesable separately, and verifiable independently.</td>
+    </tr>
+    <tr>
+      <td>Coordinated releases are inherent, yet must use a polygot of tooling.</td>
+      <td>Coordinated releases must be programmed, yet can use vanilla tooling.</td>
+    </tr>
+    <tr>
+      <td>One commit in one repo is the current state of all projects.</td>
+      <td>Each commit in each repo is the current state of each project.</td>
+    </tr>
+    <tr>
+      <td>Tight coupling of projects.</td>
+      <td>No coupling of projects.</td>
+    </tr>
+    <tr>
+      <td>Encourages thinking about conjoins among projects.</td>
+      <td>Encourages thinking about contracts between projects.</td>
+    </tr>
+    <tr>
+      <td>Access control defaults to all repos. Some teams use tools for finer-grained access control. Gitlab offers ownership control where you can say who owns what directories for things like approving merge requests that affect those directories. Google Piper has finer-grained access control. Phabricator offers herald rules that stop a merge from happening if a file has changed in a specific subdirrectory. Some teams use service owners, so when a change spans multiple services, they are all added automatically as blocking reviewers.</td>
+      </td>
+      <td>Access control defaults to per repo. Some teams use tools for broader-graned access control. GitHub offers teams where you can say one team owns many projects and for things like approving requests that affect multiple repos.</td>
+    </tr>
+    <tr>
+      <td>Monorepo scaling necessitates specialized tooling. For example, it is currently not practical to use vanilla git with very large repos, or very large files, without any extra tooling. For monorepo scaling, teams invest in writing custom tooling and providing custom training. An example is Google writing the “bazel” tool, which tracks internal dependencies by using directed acyclic graphs.</td>
+      <td>Polyrepo scaling necessitates specialized coordination. For example, it is currently not practical to use vanilla git with many projects across many repos, where a team wants to coordinate code changes, testing, packaging, and releasing. For polyrepo scaling, teams invest in writing coordination scripts and careful cross-version compatibility. An example is Lyft writing the “refactorator” tool, which automates making changes in multiple repos, including opening PRs, tracking status, etc.</td>
+    </tr>
+    <tr>
+  </tbody>
+</table>
 
 
 ### Monorepo scaling
@@ -127,7 +141,9 @@ Monorepo scaling seems to become an issue, in practice, at approximately these k
 
   * 100+ projects in progress at the same time.
 
-  * 100+ packagings during the same time period, such as a daily release.
+  * 100+ packaging processes during the same time period, such as a daily release.
+
+  * 100MM+ lines of code, which can include all versioning of all dependencies.
 
 
 ### Opinions
@@ -156,7 +172,73 @@ If tech's biggest names use a monorepo, should we do the same?
   
   * Thus, in the medium to long term, a monorepo provides zero organizational benefits, while inevitably leaving some of an organization’s best engineers with a wicked case of PTSD (manifested via drooling and incoherent mumbling about git performance internals).
 
+I’ve found monorepos to be extremely valuable in an less-mature, high-churn codebase.
 
+  * Need to change a function signature or interface? Cool, global find & replace.
+
+  * At some point a monorepo outgrows its usefulness. The sheer amount of files in something that’s 10K+ LOC (not that large, I know) warrants breaking apart the codebase into packages.
+
+  * Still, I almost err on the side of monorepos because of the convenience that editors like vscode offer: autocomplete, auto-updating imports, etc.
+
+If components need to release together, then use a monorepo.
+
+  * I'd probably go further and say that if you just think components might need to release together then they should go in the same repo, because you can in fact pretty easily manage projects with different release schedules from the same repo if you really need to.
+
+  * On the other hand if you've got a whole bunch of components in different repos which need to release together it suddenly becomes a real pain.
+
+If components need to share common code, then use a monorepo.
+
+  * If you have components that will never need to release together, then of course you can stick them in different repositories-- but if you do this and you want to share common code among the repositories, then you will need to manage that code with some sort of robust versioning system, and robust versioning systems are hard. Only do something like that when the value is high enough to justify the overhead. If you're in a startup, chances are very good that the value is not high enough.
+
+Splitting one repo is easier than combining multiple repos.
+
+  * You can split big repositories into smaller ones quite easily (in Git anyway). If you only need to do this once, then subtree will do the job, even retaining all your history if you want. As another way to split, you can duplicate the repo and pull trees out of each dupe in normal commits.
+  
+  * But combining small repositories together into a bigger repo is a lot harder. 
+  
+  * So start out with a monorepo.
+  
+  * Only split a monorepo into multiple smaller repositories when you're clear that it really makes sense.
+
+Splitting may be to fine.
+
+  * My problem with polyrepo is that often organizations end up splitting things too finely, and now I'm unable to make a single commit to introduce a feature because my changes have to live across several repositories. 
+  
+  * This makes code review more annoying because you have to tab back and forth to see all the context.
+
+  * This makes it worse to make changes to fundamental (internal) libraries used by every project. It's too much hassle to track down all the uses of a particular function, so I end up putting that change elsewhere, which means someone else will do it a little different in their corner of the world, which utterly confuses the first person who's unlucky enough to work in both code bases (at the same time, or after moving teams).
+
+OctoLinker really helps when browsing a polyrepo on Github.
+
+  * See https://github.com/OctoLinker/OctoLinker
+
+  * You can just click the import [project] name and it will switch to the repo.
+
+It's an interesting social problem in how you manage boundaries.
+
+  * Among many of the major monorepos, boundaries still exist, they just become far more opaque because no one has to track them. You find the weird gatekeepers in the dark that spring out only when you get late in your code review process because you touched "their" file and they got an automated notice from a hidden rules engine in your CI process you didn't even realize existed.
+
+  * In the polyrepo case those boundaries have to be made explicit (otherwise no one gets anything done) and those owners should be easily visible. You may not like the friction they sometimes bring to the table, but at least it won't be a surprise.
+
+My last 2 jobs have been working on developer productivity for 100+ developer organizations. 
+
+  * One organization uses monorepo, one organizatino uses polyrepo. 
+  
+  * Neither really seems to result in less work, or a better experience. But I've found that your choice just dictates what type of problems you have to solve.
+
+  * Monorepo involves mostly challenges around scaling the organization in a single repo.
+
+  * Polyrepo involves mostly challenges with coordination.
+
+Could you get the best of both worlds by having a monorepo of submodules? 
+
+  * Code would live in separate repos, but references would be declared in the monorepo. C
+  
+  * Checkins and rollbacks to the monorepo would trigger CI.
+
+  * Answer: There's not much good to either world. You need fairly extensive tooling to make working with a repo of submodules comfortable at any scale. At large scale, that tooling can be simpler than the equivalent monorepo tooling, assuming that your individual repos remain "small" but also appropriately granular (not a given--organizing is hard, especially if you leave it to individual project teams). However, in the process of getting there, a monorepo requires no particular bespoke tooling at small or even medium scale (it's just "a repo"), and the performance intolerability pretty much scales smoothly from there. And those can be treated as technical problems if you don't want to approach social problems.
+
+  * Answer: We actually did this. When I started at Uber ATG one of our devs made a submodule called `uber_monorepo` that was linked from the root of our git repo. In our repo's `.buckconfig` file we had access to everything that the mobile developers at Uber had access to by prefixing our targets with `//uber_monorepo/`. We did however run into the standard dependency resolution issue when you have any loosely coupled dependency. Updating our submodule usually required a 1-2 day effort because we were out of sync for a month or two.
 
 
 ## Git vs. Subversion vs. CVS vs. Perforce etc.
@@ -194,7 +276,6 @@ This is a common feature in most non-DCVS.
 
 This is helpful for projects where you want to skip downloading some directories that massive, such as a game project with an art directory that is 500 GB.
 
-
 Notes:
 
 * While technically true due to some features of tooling, that is really only masking off part of the repo under a READ-ONLY directory.
@@ -223,7 +304,38 @@ At FB the mobile build system doesn't seem to be as advanced in that there is a 
 
 Just to stress, the above is just my personal experience and I hope it's taken as intended: general observations rather than complaints and definitely not arguing that one is objectively better than the other. There are simply tradeoffs.
 
-	
+
+## Google source code management
+
+By [malkia](https://news.ycombinator.com/user?id=malkia)
+
+I worked at google for 2-3 years, under google3 depot.
+
+AFAIK, only few hundreth files are not visible to employees, and certain folks (contractors) may be limited there too.
+
+You can actually compile, and run in dev/staging certain things, inspect code, click on function, and see callsites, even "debug" from the browser. Debugging, is pretty much, if your binary have stepped through a bookmark, then it'll tell you, and you may print out locals from the scope - like vars, etc. - hard to explain in short.
+
+Then "checking out", to put in p4/svn - is not really like that - but you can find pretty much videos, docs explaining it. It's more like - you create a "workspace", "client" (piper has history from p4, so some terms are similar to perforce), and in this client - you "view" the entire depot, and changes you've made are "overlayed". Then you can submit these in a CL (much like perforce).
+
+There is also git (git5) and hg mode, but I've never used them. I've used the "CitC" one (client in the cloud), and was great as I was able to edit, and later edit, even build,... even deploy all from the browser (though prefer real IDE there - like Eclipse/IntelliJ/CLion).
+
+
+## Google does monorepo and polyrepo.
+
+By [malkia](https://news.ycombinator.com/user?id=malkia)
+
+Google's significant new project, fuchsia, is set-up as multi-git repo. For fuchsia, they use a tool called "jiri" to update the repos, previously (and maybe still in use) is the "gclient" sync tool way from depot_tools.
+  
+  * jiri: https://fuchsia.googlesource.com/jiri/
+  
+  * gclient: https://chromium.googlesource.com/chromium/tools/depot_tools.git/+/master/gclient
+  
+  * depot_tools: https://chromium.googlesource.com/chromium/tools/depot_tools.git
+
+  * This reflects a bit to the build system of choice, GN (used in the above), previously gyp, feels similar on the surface (script) to Bazel, but has some significant differences (gn has some more imperative parts, and it's a ninja-build generator, while bazel, like pants/bucks/please.build is a build system on it's own).
+
+  * Bazel is getting there to support monorepos (through WORKSPACEs), but there are some hard problems there.
+
 
 ## How long does a commit with tests and checks take?
 
