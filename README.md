@@ -1,8 +1,13 @@
 # Source code management - notes and ideas
 
-Notes on mono-repos, trunk-based-development, etc.
+Notes on source code management such as Git, repository architecture such as monorepo vs. multirepo, topic flows such as trunk-based-development, and more. Work in progress. Improvement ideas welcome.
 
-Work in progress.
+Contents:
+
+* [](#)
+
+
+Files:
 
 * [Security, auditing, compliance](security_auditing_compliance.md)
 * [Bazel/Blaze for dependencies](bazel_blaze_for_dependencies.md)
@@ -14,9 +19,10 @@ See also:
 * [Trunk based development](https://trunkbaseddevelopment.com/)
 * [Why Google stores billions of lines of code in a single repository (2016) (acm.org)](https://dl.acm.org/citation.cfm?id=2854146)
 * [Scaling Mercurial at Facebook](https://code.facebook.com/posts/218678814984400/scaling-mercurial-at-facebook/)
+* [Monorepos: Please don’t! by Matt Klein](https://medium.com/@mattklein123/monorepos-please-dont-e9a279be011b)
 
 
-## Tradeoffs of mono-repo vs. many-repo
+## Tradeoffs of monorepo vs. multirepo
 
 Benefits:
 
@@ -49,9 +55,79 @@ Opinions:
   * For a huge non-open codebase there are some pretty large downsides to a fully distributed VCS in exchange for relatively few benefits. 
 
 
-## Mono-repo vs. Multi-repo
+## Monorepo vs. multirepo
 
-To me the defining aspect of a monorepo is storing apparently unrelated code in the same repo, which is highly non-intuitive.
+
+### What is monorepo? What is multirepo?
+
+Monorepo is a nickname that means "using one repository for the source code management version control system".
+
+  * A monorepo architecture means using one repository, rather than multiple repositories.
+
+  * For example, a monorepo can use one repo that contains a directory for a web app project, a directory for a mobile app project, and a directory for a server app project. 
+
+  * Monorepo is a.k.a. one-repo or uni-repo.
+  
+Multirepo is a nickname that means "using multiple repostories for the source code management version control system". 
+
+  * A multirepo architecture means using multiple repositories, rather than one repository.
+
+  * For example, a multirepo can use a repo for a web app project, a repo for a mobile app project, and a repo for a server app project. 
+
+  * Multirepo is a.k.a. many-repo or poly-repo.  
+
+
+### What are key similarities and differences between monorepo and multirepo?
+
+Key similarities between monorepo and multirepo:
+
+  * Both architectures ultimately track the same source code files, and do it by using source code management (SCM) version control systems (VCS) such as git or mercurial. 
+  
+  * Both architectures are proven successful for projects of all sizes.
+
+  * Both architectures are simple to implement using any typical SCM VCS, up to a scaling limit.
+
+The key differences between monorepo and multirepo in terms of structure:
+
+  * A monorepo manages projects in one repository, together, holistically. In typical practice, a monorepo repo contains multiple projects, programming languages, packaging processes, and the like. 
+
+  * A multirepo manages projects in multiple repositories, separately, independently. In typical practice, a multirepo repo contains one project, programming language, packaging process, release roadmap, etc.
+
+The key differences between monorepo and multirepo in terms of pros and cons:
+
+  * Pro: monorepo proponents like the ability to work in all the projects simultaneously, all within the monorepo. A monorepo emphasizes that code changes affect all the projects, and can be tracked together, tested together, and released together.
+
+  * Pro: multirepo proponents like the ability to work in each project one at a time, each in its own repo. A multirepo emphasizes that code changes affect only one project, and can be tested independently, and released independently.
+  
+  * Con: monorepo scaling necessitates specialized tooling. For example, it is currently not practical to use vanilla git with very large repos, or very large files, without any extra tooling. For monorepo scaling, teams invest in writing custom tooling and providing custom training.
+
+  * Con: multirepo scaling necessitates specialized coordination. For example, it is currently not practical to use vanilla git with many projects across many repos, where a team wants to coordinate code changes, testing, packaging, and releasing. For multirepo scaling, teams invest in writing coordination scripts and careful cross-version compatibility.
+
+
+
+### Monorepo scaling
+
+Monorepo scaling becomes a problem when a typical developer can't work well with the code by using typical tools such as vanilla git.
+
+  * Monorepo scaling eventually becomes impractical in terms of space: when a monorepo grows to have more data than fits on a developer's laptop, then the developer cannot fetch the monorepo, and it may be impractical to obtain to more storage space.
+
+  * Monorepo scaling eventually becomes impractical in terms of time: when a monorepo grows, then a complete file transfer takes more time, and in practice, there are other operations that also take more time, such as git pruning, git repacking.
+    
+  * A monorepo may grow so large contain so many projects that it takes too much mental effort to work across projects, such as for searching, editing, and isolating changes.
+
+Monorepo scaling can be improved by:
+
+  * Some type of virtual file system (VFS) that allows a portion of the code to be present locally. This might be accomplished via a proprietary VCS like Perforce which natively operates this way, or via Google’s “G3” internal tooling, or via Microsoft’s GVFS.
+
+  * Sophisticated source code indexing/searching/discovery capabilities as a service. This is because a typical developer is not going to have all the source code locallly, in a searchable state, using vanilla tooling. 
+
+Monorepo scaling seems to become an issue, in practice, at approximately these kinds of metrics:
+
+  * 100+ developers writing code full time.
+
+  * 100+ projects in progress at the same time.
+
+  * 100+ packagings during the same time period, such as a daily release.
 
 
 ### Opinions
@@ -71,6 +147,16 @@ We don't use a monorepo, and it's hell.
 I would love to have a monorepo, although I'd advocate for branch-based rather than trunk-based development. 
 
   * Yes, merges can be their own kind of hell, but they impose that cost on the one making breaking changes, rather than everyone else.
+
+If tech's biggest names use a monorepo, should we do the same?
+
+  * Some of tech’s biggest names use a monorepo, including Google, Facebook, Twitter, and others. Surely if these companies all use a monorepo, the benefits must be tremendous, and we should all do the same, right? Wrong! 
+  
+  * Why? Because, at scale, a monorepo must solve every problem that a polyrepo must solve, with the downside of encouraging tight coupling, and the additional herculean effort of tackling VCS scalability. 
+  
+  * Thus, in the medium to long term, a monorepo provides zero organizational benefits, while inevitably leaving some of an organization’s best engineers with a wicked case of PTSD (manifested via drooling and incoherent mumbling about git performance internals).
+
+
 
 
 ## Git vs. Subversion vs. CVS vs. Perforce etc.
@@ -100,7 +186,7 @@ Can you check out an individual directory without having to check out the entire
 
   * Svn: yes, and this is the default way to work
  
-  * Google mono-repo: yes, and this is the default way to work
+  * Google monorepo: yes, and this is the default way to work
 
 For example in `svn`, checking out only some subdirectory instead of entire repo is pretty much the default way how you should use it.
 
