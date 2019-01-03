@@ -4,7 +4,17 @@ Notes on source code management such as Git, repository architecture such as mon
 
 Contents:
 
-* [](#)
+* [Monorepo vs. polyrepo](#monorepo-vs-polyrepo)
+  * [What is monorepo? What is polyrepo?](#what-is-monorepo-what-is-polyrepo)
+  * [Key similarities and differences of monorepo and polyrepo](#key-similarities-and-differences-of-monorepo-and-polyrepo)
+  * [Monorepo scaling](#monorepo-scaling)
+  * [Opinions](#opinions)
+* [Git vs. Subversion vs. CVS vs. Perforce etc.](#git-vs-subversion-vs-cvs-vs-perforce-etc)
+* [Partial check out](#partial-check-out)
+* [Facebook vs. Google](#facebook-vs-google)
+* [Google source code management](#google-source-code-management)
+* [Google does monorepo and polyrepo](#google-does-monorepo-and-polyrepo)
+* [How long does a commit with tests and checks take?](#how-long-does-a-commit-with-tests-and-checks-take)
 
 
 Files:
