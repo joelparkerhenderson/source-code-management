@@ -106,9 +106,9 @@ Key differences between monorepo and polyrepo, summarized from many proponents:
       <td>Encourages thinking about contracts between projects.</td>
     </tr>
     <tr>
-      <td>Access control defaults to all repos. Some teams use tools for finer-grained access control. Gitlab offers ownership control where you can say who owns what directories for things like approving merge requests that affect those directories. Google Piper has finer-grained access control. Phabricator offers herald rules that stop a merge from happening if a file has changed in a specific subdirrectory. Some teams use service owners, so when a change spans multiple services, they are all added automatically as blocking reviewers.</td>
+      <td>Access control defaults to all projects. Some teams use tools for finer-grained access control. Gitlab offers ownership control where you can say who owns what directories for things like approving merge requests that affect those directories. Google Piper has finer-grained access control. Phabricator offers herald rules that stop a merge from happening if a file has changed in a specific subdirrectory. Some teams use service owners, so when a change spans multiple services, they are all added automatically as blocking reviewers.</td>
       </td>
-      <td>Access control defaults to per repo. Some teams use tools for broader-graned access control. GitHub offers teams where you can say one team owns many projects and for things like approving requests that affect multiple repos.</td>
+      <td>Access control defaults to per project. Some teams use tools for broader-graned access control. GitHub offers teams where you can say one team owns many projects and for things like approving requests that affect multiple repos.</td>
     </tr>
     <tr>
       <td>Monorepo scaling necessitates specialized tooling. For example, it is currently not practical to use vanilla git with very large repos, or very large files, without any extra tooling. For monorepo scaling, teams invest in writing custom tooling and providing custom training. An example is Google writing the “bazel” tool, which tracks internal dependencies by using directed acyclic graphs.</td>
