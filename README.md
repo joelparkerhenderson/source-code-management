@@ -154,7 +154,7 @@ I have two main concerns when I see monorepos being used.
 
   * Second, I worry about the coupling between unrelated products. While I admit part of this probably comes from my more libertarian world view but I have seen something as basic as a server upgrade schedule that is tailored for one product severely hurt the development of another product, to the point of almost halting development for months. I can't imagine needing a new feature or a big fix from a dependency but to be stuck because the whole company isn't ready to upgrade.
 
-  * I've read of at least one less serious case of this from google with JUnit: "In 2007, Google tried to upgrade their JUnit from 3.8.x to 4.x and struggled as there was a subtle backward incompatibility in a small percentage of their usages of it. The change-set became very large, and struggled to keep up with the rate developers were adding tests.""
+  * I've read of at least one less serious case of this from google with JUnit: "In 2007, Google tried to upgrade their JUnit from 3.8.x to 4.x and struggled as there was a subtle backward incompatibility in a small percentage of their usages of it. The change-set became very large, and struggled to keep up with the rate developers were adding tests."
 
 We don't use a monorepo, and it's hell. 
 
@@ -320,7 +320,7 @@ Then "checking out", to put in p4/svn - is not really like that - but you can fi
 There is also git (git5) and hg mode, but I've never used them. I've used the "CitC" one (client in the cloud), and was great as I was able to edit, and later edit, even build,... even deploy all from the browser (though prefer real IDE there - like Eclipse/IntelliJ/CLion).
 
 
-## Google does monorepo and polyrepo.
+## Google does monorepo and polyrepo
 
 By [malkia](https://news.ycombinator.com/user?id=malkia)
 
