@@ -1,4 +1,4 @@
-# Git vs. Subversion vs. CVS vs. Perforce etc.
+# Git vs. Mercurial vs. Subversion vs. Perforce et al.
 
 Many open source projects have migrated to git. 
 
